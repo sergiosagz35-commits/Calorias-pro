@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin: 0; padding: 0; background: #0b100f; color: #e6efec; font-family: "Space Grotesk", system-ui, sans-serif; font-variant-numeric: tabular-nums; }
+  * { box-sizing: border-box; }
+  a { color: #4ee39b; }
+  a:hover { color: #8ff3c2; }
+  input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type=number] { -moz-appearance: textfield; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; } ::-webkit-scrollbar-track { background: #0e1513; } ::-webkit-scrollbar-thumb { background: #2c3f39; border-radius: 5px; }
+  * { scrollbar-color: #2c3f39 #0e1513; }
+  ::selection { background: #4ee39b; color: #08120e; }
+</style>
+</helmet>
+<div style="min-height: 100vh; background: radial-gradient(120% 80% at 15% 0%, #14201c 0%, #0b100f 60%); padding: 40px 28px 64px;">
+  <div style="max-width: 1180px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px;">
+
+    <header style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px; border-bottom: 1px solid #22312c; padding-bottom: 22px;">
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <div style="font-family: 'Manrope', sans-serif; font-size: 12px; letter-spacing: 0.22em; text-transform: uppercase; color: #4ee39b;">Registro diario</div>
+        <h1 style="margin: 0; font-size: 52px; line-height: 0.95; font-weight: 700; letter-spacing: -0.02em;">CONTROL <span style="color: #4ee39b;">{{ n }}</span> DÍAS</h1>
+        <p style="margin: 0; max-width: 560px; color: #8ba69d; font-size: 14px; line-height: 1.5; text-wrap: pretty;">Calorías consumidas, ejercicio y energía basal. Los gramos quemados y el peso se calculan solos a partir del déficit acumulado.</p>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <button onClick="{{ exportar }}" style="font-family: 'Manrope', sans-serif; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; padding: 11px 16px; border-radius: 8px; border: 1px solid #2c3f39; background: #101816; color: #c8ddd6; cursor: pointer;" style-hover="border-color: #4ee39b; color: #4ee39b;">Exportar CSV</button>
+        <button onClick="{{ reiniciar }}" style="font-family: 'Manrope', sans-serif; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; padding: 11px 16px; border-radius: 8px; border: 1px solid #2c3f39; background: #101816; color: #c8ddd6; cursor: pointer;" style-hover="border-color: #ff8f8f; color: #ff8f8f;">Reiniciar</button>
+      </div>
+    </header>
+
+    <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px;">
+      <div style="background: #101816; border: 1px solid #22312c; border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px;">
+        <div style="font-family: 'Manrope', sans-serif; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #7d968e;">Peso actual</div>
+        <div style="font-family: 'Manrope', sans-serif; font-size: 30px; font-weight: 600; color: #4ee39b;">{{ pesoActual }}<span style="font-size: 14px; color: #7d968e; margin-left: 4px;">kg</span></div>
+      </div>
+      <div style="background: #101816; border: 1px solid #22312c; border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px;">
+        <div style="font-family: 'Manrope', sans-serif; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #7d968e;">Diferencia</div>
+        <div style="font-family: 'Manrope', sans-serif; font-size: 30px; font-weight: 600;">{{ diferencia }}<span style="font-size: 14px; color: #7d968e; margin-left: 4px;">kg</span></div>
+      </div>
+      <div style="background: #101816; border: 1px solid #22312c; border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px;">
+        <div style="font-family: 'Manrope', sans-serif; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #7d968e;">Déficit medio</div>
+        <div style="font-family: 'Manrope', sans-serif; font-size: 30px; font-weight: 600;">{{ deficitMedio }}<span style="font-size: 14px; color: #7d968e; margin-left: 4px;">kcal</span></div>
+      </div>
+      <div style="background: #101816; border: 1px solid #22312c; border-radius: 12px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px;">
+        <div style="font-family: 'Manrope', sans-serif; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #7d968e;">Días registrados</div>
+        <div style="font-family: 'Manrope', sans-serif; font-size: 30px; font-weight: 600;">{{ registrados }}<span style="font-size: 14px; color: #7d968e; margin-left: 4px;">/ {{ n }}</span></div>
+        <div style="height: 4px; border-radius: 2px; background: #1c2a26; overflow: hidden;">
+          <div style="height: 100%; background: #4ee39b; width: {{ progreso }};"></div>
+        </div>
+      </div>
+    </section>
+
+    <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; background: #0e1513; border: 1px solid #22312c; border-radius: 12px; padding: 20px;">
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <label style="font-family: 'Manrope', sans-serif; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #7d968e;">Kcal por kg de grasa</label>
+        <input type="number" value="{{ kcalKg }}" onChange="{{ setKcal }}" style="font-family: 'Manrope', sans-serif; font-size: 18px; padding: 10px 12px; border-radius: 8px; border: 1px solid #2c3f39; background: #0b100f; color: #4ee39b; width: 100%;" style-focus="outline: none; border-color: #4ee39b;" />
+        <span style="font-size: 12px; color: #6d867e;">Referencia: 7.700 kcal ≈ 1 kg</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <label style="font-family: 'Manrope', sans-serif; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #7d968e;">Peso inicial (kg)</label>
+        <input type="number" step="0.1" value="{{ peso0 }}" onChange="{{ setPeso0 }}" style="font-family: 'Manrope', sans-serif; font-size: 18px; padding: 10px 12px; border-radius: 8px; border: 1px solid #2c3f39; background: #0b100f; color: #e6efec; width: 100%;" style-focus="outline: none; border-color: #4ee39b;" />
+        <span style="font-size: 12px; color: #6d867e;">Base del cálculo acumulado</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <label style="font-family: 'Manrope', sans-serif; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #7d968e;">Energía basal predeterminada</label>
+        <div style="display: flex; align-items: center; gap: 8px; border-radius: 8px; border: 1px solid #2c3f39; background: #0b100f; padding: 0 12px;">
+          <input type="number" value="{{ tB }}" onChange="{{ setTB }}" style="font-family: 'Manrope', sans-serif; font-size: 18px; padding: 10px 0; border: none; background: transparent; color: #e6efec; width: 100%; min-width: 0;" style-focus="outline: none;" />
+          <span style="font-family: 'Manrope', sans-serif; font-size: 12px; color: #7d968e;">cal</span>
+        </div>
+        <span style="font-size: 12px; color: #6d867e;">Se aplica a todos los días; escribe en la tabla solo si un día es distinto</span>
+      </div>
+    </section>
+
+    <sc-if value="{{ verGrafico }}" hint-placeholder-val="{{ true }}">
+      <section style="background: #0e1513; border: 1px solid #22312c; border-radius: 12px; padding: 20px 22px 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px;">
+          <div style="font-family: 'Manrope', sans-serif; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #7d968e;">Curva de peso</div>
+          <div style="font-family: 'Manrope', sans-serif; font-size: 12px; color: #6d867e;">{{ rangoGrafico }}</div>
+        </div>
+        <svg viewBox="0 0 1000 220" preserveAspectRatio="none" style="width: 100%; height: 180px; display: block;">
+          <path d="{{ areaPath }}" fill="rgba(78,227,155,0.12)"></path>
+          <path d="{{ linePath }}" fill="none" stroke="#4ee39b" stroke-width="2.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
+        </svg>
+      </section>
+    </sc-if>
+
+    <section style="width: 100%; border: 1px solid #22312c; border-radius: 12px; overflow: hidden; background: #0e1513;">
+      <div style="display: grid; grid-template-columns: 70px repeat(5, minmax(0, 1fr)); background: #16221f; border-bottom: 1px solid #22312c;">
+        <div style="padding: 14px 6px; font-family: 'Manrope', sans-serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #4ee39b; text-align: center;">Día</div>
+        <div style="padding: 14px 6px; font-family: 'Manrope', sans-serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #4ee39b; text-align: center;">Consumidas</div>
+        <div style="padding: 14px 6px; font-family: 'Manrope', sans-serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #4ee39b; text-align: center;">Ejercicio</div>
+        <div style="padding: 14px 6px; font-family: 'Manrope', sans-serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #4ee39b; text-align: center;">Energía basal</div>
+        <div style="padding: 14px 6px; font-family: 'Manrope', sans-serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #4ee39b; text-align: center;">Gramos quemados</div>
+        <div style="padding: 14px 6px; font-family: 'Manrope', sans-serif; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: #4ee39b; text-align: center;">Peso final</div>
+      </div>
+      <div style="max-height: 620px; overflow-y: auto;">
+        <sc-for list="{{ filas }}" as="f" hint-placeholder-count="8">
+          <div style="display: grid; grid-template-columns: 70px repeat(5, minmax(0, 1fr)); border-bottom: 1px solid #18241f; background: {{ f.bg }};">
+            <div style="padding: 6px 4px; font-family: 'Manrope', sans-serif; font-size: 22px; color: #8ba69d; text-align: center; display: flex; align-items: center; justify-content: center;">{{ f.dia }}</div>
+            <label style="display: flex; align-items: center; justify-content: center; gap: 2px; border-left: 1px solid #18241f; padding: 0 6px; min-width: 0;" style-focus-within="background: #14201c;">
+              <input type="number" value="{{ f.c }}" onChange="{{ f.onC }}" placeholder="—" style="border: none; background: transparent; color: #e6efec; font-family: 'Manrope', sans-serif; font-size: 26px; text-align: right; padding: 12px 0; width: {{ f.wC }}; min-width: 1.2em; flex: none; font-variant-numeric: tabular-nums;" style-focus="outline: none;" />
+              <span style="font-family: 'Manrope', sans-serif; font-size: 15px; color: #6d867e; flex-shrink: 0;">{{ f.uC }}</span>
+            </label>
+            <label style="display: flex; align-items: center; justify-content: center; gap: 2px; border-left: 1px solid #18241f; padding: 0 6px; min-width: 0;" style-focus-within="background: #14201c;">
+              <input type="number" value="{{ f.e }}" onChange="{{ f.onE }}" placeholder="—" style="border: none; background: transparent; color: #e6efec; font-family: 'Manrope', sans-serif; font-size: 26px; text-align: right; padding: 12px 0; width: {{ f.wE }}; min-width: 1.2em; flex: none; font-variant-numeric: tabular-nums;" style-focus="outline: none;" />
+              <span style="font-family: 'Manrope', sans-serif; font-size: 15px; color: #6d867e; flex-shrink: 0;">{{ f.uE }}</span>
+            </label>
+            <label style="display: flex; align-items: center; justify-content: center; gap: 2px; border-left: 1px solid #18241f; padding: 0 6px; min-width: 0;" style-focus-within="background: #14201c;">
+              <input type="number" value="{{ f.b }}" onChange="{{ f.onB }}" placeholder="{{ tB }}" style="border: none; background: transparent; color: #e6efec; font-family: 'Manrope', sans-serif; font-size: 26px; text-align: right; padding: 12px 0; width: {{ f.wB }}; min-width: 1.2em; flex: none; font-variant-numeric: tabular-nums;" style-focus="outline: none;" />
+              <span style="font-family: 'Manrope', sans-serif; font-size: 15px; color: #6d867e; flex-shrink: 0;">{{ f.uB }}</span>
+            </label>
+            <div style="padding: 12px 6px; font-family: 'Manrope', sans-serif; font-size: 26px; font-weight: 600; text-align: center; display: flex; align-items: center; justify-content: center; border-left: 1px solid #18241f; background: rgba(245,208,78,0.05); color: #f5d04e;">{{ f.gramos }}<span style="font-size: 15px; font-weight: 400; color: #6d867e; margin-left: 3px;">{{ f.uG }}</span></div>
+            <div style="padding: 12px 6px; font-family: 'Manrope', sans-serif; font-size: 26px; font-weight: 600; text-align: center; display: flex; align-items: center; justify-content: center; border-left: 1px solid #18241f; color: #4ee39b;">{{ f.peso }}<span style="font-size: 15px; font-weight: 400; color: #6d867e; margin-left: 3px;">{{ f.uP }}</span></div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <p style="margin: 0; font-size: 12px; color: #5f7871; font-family: 'Manrope', sans-serif;">Gramos quemados = (basal + ejercicio − consumidas) ÷ kcal por kg × 1000 · Guardado automático en este navegador</p>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;dias&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:100,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:7,&quot;max&quot;:365,&quot;section&quot;:&quot;Configuración&quot;},&quot;mostrarGrafico&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Configuración&quot;}}">
+const KEY = 'control100dias';
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+    const n = props.dias ?? 100;
+    this.state = {
+      n,
+      kcalKg: saved && saved.kcalKg != null ? saved.kcalKg : 7700,
+      peso0: saved && saved.peso0 != null ? saved.peso0 : 130,
+      tC: saved && saved.tC != null ? saved.tC : 2000,
+      tE: saved && saved.tE != null ? saved.tE : 200,
+      tB: saved && saved.tB != null ? saved.tB : 2100,
+      rows: this.norm(saved && saved.rows, n)
+    };
+  }
+
+  norm(rows, n) {
+    const out = [];
+    for (let i = 0; i < n; i++) {
+      const r = (rows && rows[i]) || {};
+      out.push({ c: r.c == null ? '' : r.c, e: r.e == null ? '' : r.e, b: r.b == null ? '' : r.b });
+    }
+    return out;
+  }
+
+  componentDidMount() {
+    if (document.fonts && document.fonts.load) document.fonts.load('400 26px Manrope').then(() => this.forceUpdate());
+  }
+
+  componentDidUpdate(prev) {
+    const n = this.props.dias ?? 100;
+    if (n !== this.state.n) this.setState({ n, rows: this.norm(this.state.rows, n) });
+  }
+
+  save(patch) {
+    this.setState(patch, () => {
+      const s = this.state;
+      try {
+        localStorage.setItem(KEY, JSON.stringify({
+          kcalKg: s.kcalKg, peso0: s.peso0, tC: s.tC, tE: s.tE, tB: s.tB, rows: s.rows
+        }));
+      } catch (e) {}
+    });
+  }
+
+  setCell(i, key, v) {
+    const rows = this.state.rows.slice();
+    rows[i] = Object.assign({}, rows[i], { [key]: v });
+    this.save({ rows });
+  }
+
+  num(v) { const x = parseFloat(v); return isFinite(x) ? x : null; }
+
+  compute() {
+    const s = this.state;
+    const kk = this.num(s.kcalKg) || 7700;
+    let peso = this.num(s.peso0) || 0;
+    const out = [];
+    let deficitTotal = 0, registrados = 0;
+    for (let i = 0; i < s.rows.length; i++) {
+      const r = s.rows[i];
+      const c = this.num(r.c), e = this.num(r.e) || 0, b = this.num(r.b) != null ? this.num(r.b) : this.num(s.tB);
+      const activo = c != null && b != null;
+      let gramos = null;
+      const pesoDia = peso;
+      if (activo) {
+        const deficit = b + e - c;
+        gramos = deficit / kk * 1000;
+        peso = peso - gramos / 1000;
+        deficitTotal += deficit;
+        registrados++;
+      }
+      out.push({ i, c: r.c, e: r.e, b: r.b, activo, gramos, pesoDia });
+    }
+    return { rows: out, pesoFinal: peso, registrados, deficitMedio: registrados ? deficitTotal / registrados : 0 };
+  }
+
+  w(v) {
+    const t = String(v == null || v === '' ? '—' : v);
+    if (!this._cv) this._cv = document.createElement('canvas').getContext('2d');
+    this._cv.font = "400 26px Manrope, sans-serif";
+    this._cv.fontVariantNumeric = 'tabular-nums';
+    const m = t.replace(/[0-9]/g, '0');
+    return Math.ceil(this._cv.measureText(m).width + 7) + 'px';
+  }
+
+  fmt(x, d) {
+    return x.toLocaleString('es-ES', { minimumFractionDigits: d, maximumFractionDigits: d });
+  }
+
+  renderVals() {
+    const s = this.state;
+    const cc = this.compute();
+    const filas = cc.rows.map(r => ({
+      dia: r.i + 1,
+      c: r.c, e: r.e, b: r.b,
+      wC: this.w(r.c), wE: this.w(r.e), wB: this.w(r.b || s.tB),
+      uC: r.c === '' ? '' : 'cal', uE: r.e === '' ? '' : 'cal', uB: r.b === '' ? '' : 'cal',
+      gramos: r.gramos == null ? '' : this.fmt(r.gramos, 2), uG: r.gramos == null ? '' : 'gr',
+      gColor: r.gramos == null ? '#4ee39b' : (r.gramos >= 0 ? '#4ee39b' : '#ff8f8f'),
+      peso: r.activo ? this.fmt(r.pesoDia - r.gramos / 1000, 3) : '', uP: r.activo ? 'kg' : '',
+      bg: r.activo ? '#111a17' : 'transparent',
+      onC: ev => this.setCell(r.i, 'c', ev.target.value),
+      onE: ev => this.setCell(r.i, 'e', ev.target.value),
+      onB: ev => this.setCell(r.i, 'b', ev.target.value)
+    }));
+
+    // curva de peso
+    const pts = cc.rows.filter(r => r.activo).map(r => r.pesoDia);
+    pts.push(cc.pesoFinal);
+    let linePath = '', areaPath = '', rangoGrafico = 'Sin datos';
+    if (pts.length > 1) {
+      const min = Math.min.apply(null, pts), max = Math.max.apply(null, pts);
+      const span = (max - min) || 1;
+      const xy = pts.map((p, i) => [i / (pts.length - 1) * 1000, 200 - (p - min) / span * 180]);
+      linePath = xy.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join(' ');
+      areaPath = linePath + ' L1000 220 L0 220 Z';
+      rangoGrafico = this.fmt(max, 2) + ' → ' + this.fmt(min, 2) + ' kg';
+    }
+
+    const dif = (this.num(s.peso0) || 0) - cc.pesoFinal;
+
+    const plantilla = (soloVacios) => {
+      const rows = s.rows.map(r => {
+        const vacio = r.c === '' && r.b === '';
+        if (soloVacios && !vacio) return r;
+        return { c: s.tC, e: s.tE, b: s.tB };
+      });
+      this.save({ rows });
+    };
+
+    return {
+      n: s.n,
+      kcalKg: s.kcalKg, peso0: s.peso0, tC: s.tC, tE: s.tE, tB: s.tB,
+      filas,
+      verGrafico: this.props.mostrarGrafico ?? true,
+      linePath, areaPath, rangoGrafico,
+      pesoActual: this.fmt(cc.pesoFinal, 3),
+      diferencia: (dif >= 0 ? '−' : '+') + this.fmt(Math.abs(dif), 3),
+      deficitMedio: this.fmt(Math.round(cc.deficitMedio), 0),
+      registrados: cc.registrados,
+      progreso: (cc.registrados / (s.n || 1) * 100).toFixed(1) + '%',
+      setKcal: ev => this.save({ kcalKg: ev.target.value }),
+      setPeso0: ev => this.save({ peso0: ev.target.value }),
+      setTC: ev => this.save({ tC: ev.target.value }),
+      setTE: ev => this.save({ tE: ev.target.value }),
+      setTB: ev => this.save({ tB: ev.target.value }),
+      reiniciar: () => { if (confirm('¿Borrar todos los días registrados?')) this.save({ rows: this.norm(null, s.n) }); },
+      exportar: () => {
+        const head = 'Dia,Consumidas,Ejercicio,Basal,GramosQuemados,Peso\n';
+        const body = cc.rows.map(r => [r.i + 1, r.c, r.e, r.b,
+          r.gramos == null ? '' : r.gramos.toFixed(2), r.activo || r.i === 0 ? r.pesoDia.toFixed(3) : ''].join(',')).join('\n');
+        const url = URL.createObjectURL(new Blob([head + body], { type: 'text/csv' }));
+        const a = document.createElement('a');
+        a.href = url; a.download = 'control-100-dias.csv'; a.click();
+        URL.revokeObjectURL(url);
+      }
+    };
+  }
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin: 0; padding: 0; background: #0b100f; color: #e6efec; font-family: "Space Grotesk", system-ui, sans-serif; -webkit-tap-highlight-color: transparent; font-variant-numeric: tabular-nums; }
+  * { box-sizing: border-box; }
+  a { color: #4ee39b; }
+  a:hover { color: #8ff3c2; }
+  input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type=number] { -moz-appearance: textfield; }
+</style>
+</helmet>
+<div style="min-height: 100vh; background: radial-gradient(140% 60% at 0% 0%, #14201c 0%, #0b100f 60%);">
+  <div style="max-width: 480px; margin: 0 auto; padding: 0 16px 40px; display: flex; flex-direction: column; gap: 16px;">
+
+    <header style="position: sticky; top: 0; z-index: 5; background: rgba(11,16,15,0.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); margin: 0 -16px; padding: 16px 16px 14px; border-bottom: 1px solid #22312c; display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <div style="font-family: 'Manrope', sans-serif; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #4ee39b;">Registro diario</div>
+        <div style="font-size: 22px; font-weight: 700; letter-spacing: -0.01em; line-height: 1;">CONTROL <span style="color: #4ee39b;">{{ n }}</span> DÍAS</div>
+      </div>
+      <button onClick="{{ toggleCfg }}" style="width: 44px; height: 44px; border-radius: 12px; border: 1px solid #2c3f39; background: #101816; color: #c8ddd6; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;" aria-label="Ajustes">⚙</button>
+    </header>
+
+    <sc-if value="{{ showCfg }}" hint-placeholder-val="{{ false }}">
+      <section style="background: #0e1513; border: 1px solid #22312c; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <label style="display: flex; flex-direction: column; gap: 6px;">
+            <span style="font-family: 'Manrope', sans-serif; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #7d968e;">Kcal / kg</span>
+            <input type="number" inputmode="numeric" value="{{ kcalKg }}" onChange="{{ setKcal }}" style="height: 48px; font-family: 'Manrope', sans-serif; font-size: 17px; padding: 0 12px; border-radius: 10px; border: 1px solid #2c3f39; background: #0b100f; color: #4ee39b; width: 100%;" style-focus="outline: none; border-color: #4ee39b;" />
+          </label>
+          <label style="display: flex; flex-direction: column; gap: 6px;">
+            <span style="font-family: 'Manrope', sans-serif; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #7d968e;">Peso inicial</span>
+            <input type="number" inputmode="decimal" step="0.1" value="{{ peso0 }}" onChange="{{ setPeso0 }}" style="height: 48px; font-family: 'Manrope', sans-serif; font-size: 17px; padding: 0 12px; border-radius: 10px; border: 1px solid #2c3f39; background: #0b100f; color: #e6efec; width: 100%;" style-focus="outline: none; border-color: #4ee39b;" />
+          </label>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <span style="font-family: 'Manrope', sans-serif; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #7d968e;">Plantilla diaria · consumidas / ejercicio / basal</span>
+          <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px;">
+            <input type="number" inputmode="numeric" value="{{ tC }}" onChange="{{ setTC }}" style="height: 48px; font-family: 'Manrope', sans-serif; font-size: 15px; text-align: center; border-radius: 10px; border: 1px solid #2c3f39; background: #0b100f; color: #e6efec; width: 100%;" style-focus="outline: none; border-color: #4ee39b;" />
+            <input type="number" inputmode="numeric" value="{{ tE }}" onChange="{{ setTE }}" style="height: 48px; font-family: 'Manrope', sans-serif; font-size: 15px; text-align: center; border-radius: 10px; border: 1px solid #2c3f39; background: #0b100f; color: #e6efec; width: 100%;" style-focus="outline: none; border-color: #4ee39b;" />
+            <input type="number" inputmode="numeric" value="{{ tB }}" onChange="{{ setTB }}" style="height: 48px; font-family: 'Manrope', sans-serif; font-size: 15px; text-align: center; border-radius: 10px; border: 1px solid #2c3f39; background: #0b100f; color: #e6efec; width: 100%;" style-focus="outline: none; border-color: #4ee39b;" />
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 12px; border-top: 1px solid #22312c; padding-top: 14px;">
+          <button onClick="{{ toggleAuto }}" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 48px; padding: 0; border: none; background: transparent; color: #e6efec; cursor: pointer; font-family: 'Manrope', sans-serif; text-align: left;">
+            <span style="display: flex; flex-direction: column; gap: 3px;">
+              <span style="font-size: 15px; font-weight: 600;">Energía basal automática</span>
+              <span style="font-size: 12px; color: #7d968e;">Se calcula cada día con tu peso (Mifflin-St Jeor)</span>
+            </span>
+            <span style="width: 46px; height: 28px; border-radius: 999px; background: {{ swBg }}; padding: 3px; display: flex; justify-content: {{ swJust }}; flex-shrink: 0;">
+              <span style="width: 22px; height: 22px; border-radius: 50%; background: #e6efec;"></span>
+            </span>
+          </button>
+          <sc-if value="{{ autoBasal }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-family: 'Manrope', sans-serif; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #7d968e;">Altura (cm)</span><input type="number" inputmode="numeric" value="{{ altura }}" onChange="{{ setAltura }}" style="height: 48px; font-family: 'Manrope', sans-serif; font-size: 17px; padding: 0 12px; border-radius: 10px; border: 1px solid #2c3f39; background: #0b100f; color: #e6efec; width: 100%;" style-focus="outline: none; border-color: #4ee39b;" /></label>
+                <label style="display: flex; flex-direction: column; gap: 6px;"><span style="font-family: 'Manrope', sans-serif; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #7d968e;">Edad</span><input type="number" inputmode="numeric" value="{{ edad }}" onChange="{{ setEdad }}" style="height: 48px; font-family: 'Manrope', sans-serif; font-size: 17px; padding: 0 12px; border-radius: 10px; border: 1px solid #2c3f39; background: #0b100f; color: #e6efec; width: 100%;" style-focus="outline: none; border-color: #4ee39b;" /></label>
+              </div>
+              <div style="display: flex; gap: 4px; padding: 4px; border-radius: 10px; background: #0b100f; border: 1px solid #2c3f39;">
+                <button onClick="{{ setH }}" style="flex: 1; height: 40px; border-radius: 8px; border: none; background: {{ sexH }}; color: {{ sexHTxt }}; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer;">Hombre</button>
+                <button onClick="{{ setM }}" style="flex: 1; height: 40px; border-radius: 8px; border: none; background: {{ sexM }}; color: {{ sexMTxt }}; font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer;">Mujer</button>
+              </div>
+              <div style="font-size: 12px; color: #7d968e; font-family: 'Manrope', sans-serif;">Basal hoy: <span style="color: #4ee39b; font-weight: 700;">{{ basalHoy }} cal</span></div>
+            </div>
+          </sc-if>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <button onClick="{{ exportar }}" style="height: 44px; font-family: 'Manrope', sans-serif; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 10px; border: 1px solid #2c3f39; background: #101816; color: #c8ddd6; cursor: pointer;" style-active="border-color: #4ee39b; color: #4ee39b;">Exportar CSV</button>
+          <button onClick="{{ reiniciar }}" style="height: 44px; font-family: 'Manrope', sans-serif; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 10px; border: 1px solid #3a2a2a; background: #101816; color: #ff8f8f; cursor: pointer;">Reiniciar</button>
+        </div>
+      </section>
+    </sc-if>
+
+    <section style="background: #101816; border: 1px solid #22312c; border-radius: 18px; padding: 18px 18px 10px; display: flex; flex-direction: column; gap: 4px;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <span style="font-family: 'Manrope', sans-serif; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: #7d968e;">Peso actual</span>
+          <span style="font-family: 'Manrope', sans-serif; font-size: 38px; font-weight: 600; color: #4ee39b; line-height: 1;">{{ pesoActual }}<span style="font-size: 14px; color: #7d968e; margin-left: 4px;">kg</span></span>
+        </div>
+        <span style="font-family: 'Manrope', sans-serif; font-size: 13px; font-weight: 600; padding: 6px 10px; border-radius: 999px; background: rgba(78,227,155,0.12); color: #4ee39b;">{{ diferencia }} kg</span>
+      </div>
+      <sc-if value="{{ verGrafico }}" hint-placeholder-val="{{ true }}">
+        <svg viewBox="0 0 1000 220" preserveAspectRatio="none" style="width: 100%; height: 90px; display: block; margin-top: 8px;">
+          <path d="{{ areaPath }}" fill="rgba(78,227,155,0.12)"></path>
+          <path d="{{ linePath }}" fill="none" stroke="#4ee39b" stroke-width="2.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"></path>
+        </svg>
+      </sc-if>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid #22312c; margin-top: 6px;">
+        <div style="padding: 12px 0 8px; display: flex; flex-direction: column; gap: 4px;">
+          <span style="font-family: 'Manrope', sans-serif; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #7d968e;">Déficit medio</span>
+          <span style="font-family: 'Manrope', sans-serif; font-size: 17px; font-weight: 600;">{{ deficitMedio }} kcal</span>
+        </div>
+        <div style="padding: 12px 0 8px 14px; border-left: 1px solid #22312c; display: flex; flex-direction: column; gap: 6px;">
+          <span style="font-family: 'Manrope', sans-serif; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #7d968e;">Registrados</span>
+          <span style="font-family: 'Manrope', sans-serif; font-size: 17px; font-weight: 600;">{{ registrados }} / {{ n }}</span>
+          <div style="height: 3px; border-radius: 2px; background: #1c2a26; overflow: hidden;"><div style="height: 100%; background: #4ee39b; width: {{ progreso }};"></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section style="background: #0e1513; border: 1px solid #2c3f39; border-radius: 18px; padding: 14px; display: flex; flex-direction: column; gap: 14px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;">
+        <button onClick="{{ prev }}" style="width: 48px; height: 48px; border-radius: 12px; border: 1px solid #2c3f39; background: #101816; color: #e6efec; font-size: 20px; cursor: pointer;" aria-label="Día anterior">‹</button>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
+          <span style="font-family: 'Manrope', sans-serif; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #7d968e;">Día</span>
+          <span style="font-family: 'Manrope', sans-serif; font-size: 28px; font-weight: 600; line-height: 1;">{{ selDia }}</span>
+        </div>
+        <button onClick="{{ next }}" style="width: 48px; height: 48px; border-radius: 12px; border: 1px solid #2c3f39; background: #101816; color: #e6efec; font-size: 20px; cursor: pointer;" aria-label="Día siguiente">›</button>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <label style="display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #0b100f; border: 1px solid #22312c; border-radius: 12px; padding: 0 14px; height: 56px;">
+          <span style="font-size: 15px; color: #c8ddd6;">Consumidas</span>
+          <input type="number" inputmode="numeric" placeholder="0" value="{{ selC }}" onChange="{{ onSelC }}" style="flex: 1; min-width: 0; border: none; background: transparent; color: #e6efec; font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 600; text-align: right; height: 100%;" style-focus="outline: none; color: #4ee39b;" />
+        </label>
+        <label style="display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #0b100f; border: 1px solid #22312c; border-radius: 12px; padding: 0 14px; height: 56px;">
+          <span style="font-size: 15px; color: #c8ddd6;">Ejercicio</span>
+          <input type="number" inputmode="numeric" placeholder="0" value="{{ selE }}" onChange="{{ onSelE }}" style="flex: 1; min-width: 0; border: none; background: transparent; color: #e6efec; font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 600; text-align: right; height: 100%;" style-focus="outline: none; color: #4ee39b;" />
+        </label>
+        <label style="display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #0b100f; border: 1px solid #22312c; border-radius: 12px; padding: 0 14px; height: 56px;">
+          <span style="font-size: 15px; color: #c8ddd6;">Energía basal</span>
+          <sc-if value="{{ autoBasal }}" hint-placeholder-val="{{ false }}"><span style="display: flex; align-items: center; gap: 8px; font-family: 'Manrope', sans-serif;"><span style="font-size: 10px; font-weight: 700; letter-spacing: 0.1em; padding: 3px 6px; border-radius: 6px; background: rgba(78,227,155,0.14); color: #4ee39b;">AUTO</span><span style="font-size: 20px; font-weight: 600; color: #e6efec;">{{ selBAuto }}</span></span></sc-if><sc-if value="{{ basalManual }}" hint-placeholder-val="{{ true }}"><input type="number" inputmode="numeric" placeholder="0" value="{{ selB }}" onChange="{{ onSelB }}" style="flex: 1; width: 100%; min-width: 0; border: none; background: transparent; color: #e6efec; font-family: 'Manrope', sans-serif; font-size: 20px; font-weight: 600; text-align: right; height: 100%;" style-focus="outline: none; color: #4ee39b;" /></sc-if>
+        </label>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+        <div style="background: rgba(78,227,155,0.07); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 4px;">
+          <span style="font-family: 'Manrope', sans-serif; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #7d968e;">Gramos quemados</span>
+          <span style="font-family: 'Manrope', sans-serif; font-size: 18px; font-weight: 600; color: {{ selGColor }};">{{ selGramos }}</span>
+        </div>
+        <div style="background: #101816; border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 4px;">
+          <span style="font-family: 'Manrope', sans-serif; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #7d968e;">Peso del día</span>
+          <span style="font-family: 'Manrope', sans-serif; font-size: 18px; font-weight: 600;">{{ selPeso }}</span>
+        </div>
+      </div>
+      <button onClick="{{ usarPlantilla }}" style="height: 48px; border-radius: 12px; border: none; background: #4ee39b; color: #08120e; font-family: 'Manrope', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;" style-active="background: #8ff3c2;">Usar plantilla en este día</button>
+    </section>
+
+    <section style="display: flex; flex-direction: column; gap: 8px;">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 0 4px;">
+        <span style="font-family: 'Manrope', sans-serif; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: #7d968e;">Todos los días</span>
+        <span style="font-family: 'Manrope', sans-serif; font-size: 10px; color: #5f7871;">Toca para editar</span>
+      </div>
+      <div style="border: 1px solid #22312c; border-radius: 12px; overflow: hidden; background: #0e1513;">
+        <table style="width: 100%; border-collapse: collapse; border-style: hidden; font-family: 'Manrope', sans-serif; font-variant-numeric: tabular-nums;">
+          <thead>
+            <tr style="background: #16221f;">
+              <th style="padding: 9px 4px; border: 1px solid #22312c; font-weight: 700; font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; color: #4ee39b; text-align: center;">Día</th>
+              <th style="padding: 9px 4px; border: 1px solid #22312c; font-weight: 700; font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; color: #4ee39b; text-align: center;">Consum.</th>
+              <th style="padding: 9px 4px; border: 1px solid #22312c; font-weight: 700; font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; color: #4ee39b; text-align: center;">Quem.</th>
+              <th style="padding: 9px 4px; border: 1px solid #22312c; font-weight: 700; font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; color: #4ee39b; text-align: center;">Basal</th>
+              <th style="padding: 9px 4px; border: 1px solid #22312c; font-weight: 700; font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; color: #4ee39b; text-align: center;">Gramos</th>
+              <th style="padding: 9px 4px; border: 1px solid #22312c; font-weight: 700; font-size: 9px; letter-spacing: 0.06em; text-transform: uppercase; color: #4ee39b; text-align: center;">Peso fin</th>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{ filas }}" as="f" hint-placeholder-count="8">
+              <tr onClick="{{ f.pick }}" style="background: {{ f.bg }}; cursor: pointer; font-size: 17px; font-weight: 600; letter-spacing: -0.01em;">
+                <td style="padding: 9px 4px; border: 1px solid #1c2a26; text-align: center; font-size: 14px; color: {{ f.diaColor }};">{{ f.dia }}</td>
+                <td style="padding: 9px 4px; border: 1px solid #1c2a26; text-align: center; white-space: nowrap; color: #e6efec;">{{ f.c }}<span style="font-size: 9px; font-weight: 500; color: #6d867e; margin-left: 1px;">{{ f.uC }}</span></td>
+                <td style="padding: 9px 4px; border: 1px solid #1c2a26; text-align: center; white-space: nowrap; color: #e6efec;">{{ f.e }}<span style="font-size: 9px; font-weight: 500; color: #6d867e; margin-left: 1px;">{{ f.uE }}</span></td>
+                <td style="padding: 9px 4px; border: 1px solid #1c2a26; text-align: center; white-space: nowrap; color: #e6efec;">{{ f.b }}<span style="font-size: 9px; font-weight: 500; color: #6d867e; margin-left: 1px;">{{ f.uB }}</span></td>
+                <td style="padding: 9px 4px; border: 1px solid #1c2a26; text-align: center; white-space: nowrap; color: #f5d04e;">{{ f.gramos }}<span style="font-size: 9px; font-weight: 500; color: #6d867e; margin-left: 1px;">{{ f.uG }}</span></td>
+                <td style="padding: 9px 4px; border: 1px solid #1c2a26; text-align: center; white-space: nowrap; color: #4ee39b;">{{ f.pesoFin }}<span style="font-size: 9px; font-weight: 500; color: #6d867e; margin-left: 1px;">{{ f.uP }}</span></td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <p style="margin: 0; padding: 0 4px; font-size: 11px; line-height: 1.5; color: #5f7871; font-family: 'Manrope', sans-serif;">Gramos = (basal + ejercicio − consumidas) ÷ kcal/kg × 1000 · Datos compartidos con la versión de escritorio</p>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:390,&quot;height&quot;:844},&quot;dias&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:100,&quot;tsType&quot;:&quot;number&quot;,&quot;min&quot;:7,&quot;max&quot;:365,&quot;section&quot;:&quot;Configuración&quot;},&quot;mostrarGrafico&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Configuración&quot;}}">
+const KEY = 'control100dias';
+
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) {}
+    const n = props.dias ?? 100;
+    const g = (k, d) => (saved && saved[k] != null ? saved[k] : d);
+    const rows = this.norm(saved && saved.rows, n);
+    const firstEmpty = rows.findIndex(r => r.c === '' && r.b === '');
+    this.state = {
+      n, showCfg: false,
+      kcalKg: g('kcalKg', 7700), peso0: g('peso0', 130),
+      tC: g('tC', 2000), tE: g('tE', 200), tB: g('tB', 2100),
+      autoBasal: g('autoBasal', false), altura: g('altura', 175), edad: g('edad', 35), sexo: g('sexo', 'H'),
+      rows, sel: firstEmpty < 0 ? n - 1 : firstEmpty
+    };
+  }
+
+  norm(rows, n) {
+    const out = [];
+    for (let i = 0; i < n; i++) {
+      const r = (rows && rows[i]) || {};
+      out.push({ c: r.c == null ? '' : r.c, e: r.e == null ? '' : r.e, b: r.b == null ? '' : r.b });
+    }
+    return out;
+  }
+
+  componentDidUpdate() {
+    const n = this.props.dias ?? 100;
+    if (n !== this.state.n) this.setState({ n, rows: this.norm(this.state.rows, n), sel: Math.min(this.state.sel, n - 1) });
+  }
+
+  save(patch) {
+    this.setState(patch, () => {
+      const s = this.state;
+      try { localStorage.setItem(KEY, JSON.stringify({ kcalKg: s.kcalKg, peso0: s.peso0, tC: s.tC, tE: s.tE, tB: s.tB, autoBasal: s.autoBasal, altura: s.altura, edad: s.edad, sexo: s.sexo, rows: s.rows })); } catch (e) {}
+    });
+  }
+
+  setCell(i, key, v) {
+    const rows = this.state.rows.slice();
+    rows[i] = Object.assign({}, rows[i], { [key]: v });
+    this.save({ rows });
+  }
+
+  bmr(kg) {
+    const s = this.state;
+    return 10 * kg + 6.25 * (this.num(s.altura) || 0) - 5 * (this.num(s.edad) || 0) + (s.sexo === 'M' ? -161 : 5);
+  }
+
+  num(v) { const x = parseFloat(v); return isFinite(x) ? x : null; }
+  fmt(x, d) { return x.toLocaleString('es-ES', { minimumFractionDigits: d, maximumFractionDigits: d }); }
+
+  compute() {
+    const s = this.state;
+    const kk = this.num(s.kcalKg) || 7700;
+    let peso = this.num(s.peso0) || 0, deficitTotal = 0, registrados = 0;
+    const out = s.rows.map((r, i) => {
+      const c = this.num(r.c), e = this.num(r.e) || 0, b = s.autoBasal ? this.bmr(peso) : this.num(r.b);
+      const activo = c != null && b != null;
+      const pesoDia = peso;
+      let gramos = null;
+      if (activo) {
+        const d = b + e - c;
+        gramos = d / kk * 1000;
+        peso -= gramos / 1000;
+        deficitTotal += d; registrados++;
+      }
+      return { i, c: r.c, e: r.e, b: s.autoBasal ? String(Math.round(b)) : r.b, activo, gramos, pesoDia };
+    });
+    return { rows: out, pesoFinal: peso, registrados, deficitMedio: registrados ? deficitTotal / registrados : 0 };
+  }
+
+  renderVals() {
+    const s = this.state;
+    const cc = this.compute();
+    const gTxt = g => (g == null ? '—' : (g >= 0 ? '' : '') + this.fmt(g, 1) + ' g');
+    const gCol = g => (g == null ? '#4a5f58' : g >= 0 ? '#4ee39b' : '#ff8f8f');
+
+    const filas = cc.rows.map(r => ({
+      dia: String(r.i + 1).padStart(2, '0'),
+      diaColor: r.i === s.sel ? '#4ee39b' : '#7d968e',
+      c: r.c === '' ? '—' : r.c, uC: r.c === '' ? '' : 'cal', uE: r.e === '' ? '' : 'cal', uB: r.b === '' ? '' : 'cal', uG: r.activo ? 'gr' : '', uP: r.activo ? 'kg' : '',
+      e: r.e === '' ? '—' : r.e,
+      b: r.b === '' ? '—' : r.b,
+      pesoFin: r.activo ? this.fmt(r.pesoDia - r.gramos / 1000, 2) : '—',
+      gramos: r.gramos == null ? '—' : this.fmt(r.gramos, 1),
+      gColor: gCol(r.gramos),
+      bg: r.i === s.sel ? '#15221e' : 'transparent',
+      pick: () => { this.setState({ sel: r.i }); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    }));
+
+    const pts = cc.rows.filter(r => r.activo).map(r => r.pesoDia);
+    pts.push(cc.pesoFinal);
+    let linePath = '', areaPath = '';
+    if (pts.length > 1) {
+      const min = Math.min.apply(null, pts), max = Math.max.apply(null, pts), span = (max - min) || 1;
+      linePath = pts.map((p, i) => (i ? 'L' : 'M') + (i / (pts.length - 1) * 1000).toFixed(1) + ' ' + (200 - (p - min) / span * 180).toFixed(1)).join(' ');
+      areaPath = linePath + ' L1000 220 L0 220 Z';
+    }
+
+    const dif = (this.num(s.peso0) || 0) - cc.pesoFinal;
+    const sr = cc.rows[s.sel] || cc.rows[0];
+
+    return {
+      n: s.n, showCfg: s.showCfg,
+      toggleCfg: () => this.setState({ showCfg: !s.showCfg }),
+      kcalKg: s.kcalKg, peso0: s.peso0, tC: s.tC, tE: s.tE, tB: s.tB,
+      setKcal: ev => this.save({ kcalKg: ev.target.value }),
+      setPeso0: ev => this.save({ peso0: ev.target.value }),
+      setTC: ev => this.save({ tC: ev.target.value }),
+      setTE: ev => this.save({ tE: ev.target.value }),
+      setTB: ev => this.save({ tB: ev.target.value }),
+      verGrafico: this.props.mostrarGrafico ?? true,
+      linePath, areaPath,
+      pesoActual: this.fmt(cc.pesoFinal, 2),
+      diferencia: (dif >= 0 ? '−' : '+') + this.fmt(Math.abs(dif), 2),
+      deficitMedio: this.fmt(Math.round(cc.deficitMedio), 0),
+      registrados: cc.registrados,
+      progreso: (cc.registrados / (s.n || 1) * 100).toFixed(1) + '%',
+      selDia: sr.i + 1,
+      selC: sr.c, selE: sr.e, selB: sr.b,
+      onSelC: ev => this.setCell(sr.i, 'c', ev.target.value),
+      onSelE: ev => this.setCell(sr.i, 'e', ev.target.value),
+      onSelB: ev => this.setCell(sr.i, 'b', ev.target.value),
+      selGramos: gTxt(sr.gramos), selGColor: gCol(sr.gramos),
+      selPeso: this.fmt(sr.pesoDia, 3) + ' kg',
+      prev: () => this.setState({ sel: Math.max(0, s.sel - 1) }),
+      next: () => this.setState({ sel: Math.min(s.n - 1, s.sel + 1) }),
+      usarPlantilla: () => { const rows = s.rows.slice(); rows[sr.i] = { c: s.tC, e: s.tE, b: s.tB }; this.save({ rows }); },
+      filas,
+      autoBasal: !!s.autoBasal, basalManual: !s.autoBasal,
+      toggleAuto: () => this.save({ autoBasal: !s.autoBasal }),
+      swBg: s.autoBasal ? '#4ee39b' : '#2c3f39', swJust: s.autoBasal ? 'flex-end' : 'flex-start',
+      altura: s.altura, edad: s.edad,
+      setAltura: ev => this.save({ altura: ev.target.value }),
+      setEdad: ev => this.save({ edad: ev.target.value }),
+      sexH: s.sexo !== 'M' ? '#4ee39b' : 'transparent', sexHTxt: s.sexo !== 'M' ? '#08120e' : '#c8ddd6',
+      sexM: s.sexo === 'M' ? '#4ee39b' : 'transparent', sexMTxt: s.sexo === 'M' ? '#08120e' : '#c8ddd6',
+      setH: () => this.save({ sexo: 'H' }), setM: () => this.save({ sexo: 'M' }),
+      basalHoy: this.fmt(Math.round(this.bmr(cc.pesoFinal)), 0),
+      selBAuto: this.fmt(Math.round(this.bmr(sr.pesoDia)), 0),
+      reiniciar: () => { if (confirm('¿Borrar todos los días registrados?')) this.save({ rows: this.norm(null, s.n), sel: 0 }); },
+      exportar: () => {
+        const body = cc.rows.map(r => [r.i + 1, r.c, r.e, r.b, r.gramos == null ? '' : r.gramos.toFixed(2), r.activo || r.i === 0 ? r.pesoDia.toFixed(3) : ''].join(',')).join('\n');
+        const url = URL.createObjectURL(new Blob(['Dia,Consumidas,Ejercicio,Basal,GramosQuemados,Peso\n' + body], { type: 'text/csv' }));
+        const a = document.createElement('a'); a.href = url; a.download = 'control-100-dias.csv'; a.click();
+        URL.revokeObjectURL(url);
+      }
+    };
+  }
+}
+
+</script>
+</body>
+</html>
