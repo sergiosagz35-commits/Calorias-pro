@@ -1,0 +1,267 @@
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #0b100f;
+  color: #e6efec;
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input[type=number] { -moz-appearance: textfield; }
+
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #0e1513; }
+::-webkit-scrollbar-thumb { background: #2c3f39; border-radius: 5px; }
+* { scrollbar-color: #2c3f39 #0e1513; }
+::selection { background: #4ee39b; color: #08120e; }
+
+.accent { color: #4ee39b; }
+
+.page {
+  min-height: 100vh;
+  background: radial-gradient(120% 80% at 15% 0%, #14201c 0%, #0b100f 60%);
+  padding: 40px 28px 64px;
+}
+
+.wrap {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* Cabecera */
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid #22312c;
+  padding-bottom: 22px;
+}
+.head-text { display: flex; flex-direction: column; gap: 8px; }
+.eyebrow {
+  font-family: "Manrope", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #4ee39b;
+}
+h1 {
+  margin: 0;
+  font-size: 52px;
+  line-height: 0.95;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.lead {
+  margin: 0;
+  max-width: 560px;
+  color: #8ba69d;
+  font-size: 14px;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+.actions { display: flex; gap: 10px; }
+.btn {
+  font-family: "Manrope", sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 11px 16px;
+  border-radius: 8px;
+  border: 1px solid #2c3f39;
+  background: #101816;
+  color: #c8ddd6;
+  cursor: pointer;
+}
+.btn:hover { border-color: #4ee39b; color: #4ee39b; }
+.btn-danger:hover { border-color: #ff8f8f; color: #ff8f8f; }
+
+/* Etiquetas comunes */
+.label {
+  font-family: "Manrope", sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #7d968e;
+}
+
+/* Tarjetas de resumen */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+.card {
+  background: #101816;
+  border: 1px solid #22312c;
+  border-radius: 12px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.card-progress { gap: 10px; }
+.stat {
+  font-family: "Manrope", sans-serif;
+  font-size: 30px;
+  font-weight: 600;
+}
+.stat-unit { font-size: 14px; color: #7d968e; margin-left: 4px; }
+.bar { height: 4px; border-radius: 2px; background: #1c2a26; overflow: hidden; }
+.bar-fill { height: 100%; background: #4ee39b; width: 0; }
+
+/* Configuración */
+.config {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 14px;
+  background: #0e1513;
+  border: 1px solid #22312c;
+  border-radius: 12px;
+  padding: 20px;
+}
+.field { display: flex; flex-direction: column; gap: 8px; }
+.input {
+  font-family: "Manrope", sans-serif;
+  font-size: 18px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #2c3f39;
+  background: #0b100f;
+  color: #e6efec;
+  width: 100%;
+}
+.input:focus { outline: none; border-color: #4ee39b; }
+.input-accent { color: #4ee39b; }
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 8px;
+  border: 1px solid #2c3f39;
+  background: #0b100f;
+  padding: 0 12px;
+}
+.input-group input {
+  font-family: "Manrope", sans-serif;
+  font-size: 18px;
+  padding: 10px 0;
+  border: none;
+  background: transparent;
+  color: #e6efec;
+  width: 100%;
+  min-width: 0;
+}
+.input-group input:focus { outline: none; }
+.input-unit { font-family: "Manrope", sans-serif; font-size: 12px; color: #7d968e; }
+.hint { font-size: 12px; color: #6d867e; }
+
+/* Gráfico */
+.chart {
+  background: #0e1513;
+  border: 1px solid #22312c;
+  border-radius: 12px;
+  padding: 20px 22px 12px;
+}
+.chart[hidden] { display: none; }
+.chart-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+.chart-range { font-family: "Manrope", sans-serif; font-size: 12px; color: #6d867e; }
+.chart svg { width: 100%; height: 180px; display: block; }
+
+/* Tabla */
+.table {
+  width: 100%;
+  border: 1px solid #22312c;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0e1513;
+}
+.row {
+  display: grid;
+  grid-template-columns: 70px repeat(5, minmax(0, 1fr));
+}
+.row-head { background: #16221f; border-bottom: 1px solid #22312c; }
+.row-head > div {
+  padding: 14px 6px;
+  font-family: "Manrope", sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #4ee39b;
+  text-align: center;
+}
+.table-body { max-height: 620px; overflow-y: auto; }
+.table-body .row { border-bottom: 1px solid #18241f; background: transparent; }
+.table-body .row.activo { background: #111a17; }
+
+.cell-dia {
+  padding: 6px 4px;
+  font-family: "Manrope", sans-serif;
+  font-size: 22px;
+  color: #8ba69d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cell-in {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  border-left: 1px solid #18241f;
+  padding: 0 6px;
+  min-width: 0;
+}
+.cell-in:focus-within { background: #14201c; }
+.cell-in input {
+  border: none;
+  background: transparent;
+  color: #e6efec;
+  font-family: "Manrope", sans-serif;
+  font-size: 26px;
+  text-align: right;
+  padding: 12px 0;
+  min-width: 1.2em;
+  flex: none;
+  font-variant-numeric: tabular-nums;
+}
+.cell-in input:focus { outline: none; }
+.cell-unit {
+  font-family: "Manrope", sans-serif;
+  font-size: 15px;
+  color: #6d867e;
+  flex-shrink: 0;
+}
+.cell-out {
+  padding: 12px 6px;
+  font-family: "Manrope", sans-serif;
+  font-size: 26px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid #18241f;
+}
+.cell-out .cell-unit { font-weight: 400; margin-left: 3px; }
+.cell-gramos { background: rgba(245, 208, 78, 0.05); color: #f5d04e; }
+.cell-peso { color: #4ee39b; }
+
+.foot {
+  margin: 0;
+  font-size: 12px;
+  color: #5f7871;
+  font-family: "Manrope", sans-serif;
+}
